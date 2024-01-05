@@ -6,7 +6,7 @@ const app = express();
 /**
  * Plugins
  */
-// app.use(express.json())
+app.use(express.json())
 
 /**
  * Data
@@ -82,12 +82,33 @@ app.delete('/api/notes/:id', (request, response) => {
 /**
  * Create a single resource
  */
-app.post('/api/notes', (request, response) => {
-  const note = request.body
-  console.log('>note', note)
+app.post('/api/notes', (request, response) => { 
+  if (!request.body?.content) {
+    return response.status(400).json({
+      code: 100,
+      message: 'The content is not missing.'
+    })
+  }
+
+  const { body: { content = '', important = false } } = request;
+  const note = {
+    content,
+    important: Boolean(important),
+    id: generateId()
+  }
+  notes = notes.concat(note)
 
   response.json(note)
 })
+
+/**
+ * Utils
+*/
+const generateId = () => {
+  const maxId = notes.length ? Math.max(...notes.map(note => Number(note.id))) : 0
+
+  return Number(maxId + 1)
+}
 
 const PORT = 3001
 app.listen(PORT, () => {
