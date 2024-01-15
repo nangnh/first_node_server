@@ -80,7 +80,7 @@ app.delete('/api/notes/:id', (request, response) => {
 })
 
 /**
- * Create a single resource
+ * CREATE a single resource
  */
 app.post('/api/notes', (request, response) => { 
   if (!request.body?.content) {
